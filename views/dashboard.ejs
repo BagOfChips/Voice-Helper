@@ -4,6 +4,57 @@
     <title>voice app helper</title>
     <link rel='stylesheet' href='/stylesheets/style.css'/>
 
+
+    <script src="/javascripts/jquery-3.1.1.js"></script>
+    <script>
+        $(document).ready(function(){
+
+            // check for session
+            // redirect user to login page if session does not exist
+            $.get('/check-session', {}, function(data){
+                if(data === 'sessionless'){
+                    window.location.replace("http://localhost:3000");
+                }
+            });
+
+            window.addEventListener("keydown", keyPressed, false);
+            window.addEventListener("keyup", keyReleased, false);
+
+            var ctrlPressed = false;
+            var shiftPressed = false;
+            var zPressed = false;
+
+            // to prevent EventEmitter memory leak
+            var zChecked = false;
+
+            // when ctrl-shift-z is pressed, start recording
+            function keyPressed(e){
+                if(e.ctrlKey){
+                    ctrlPressed = true;
+                }
+                if(e.shiftKey && ctrlPressed){
+                    shiftPressed = true;
+                }
+                if(e.keyCode == 90 && shiftPressed && ctrlPressed){
+                    zPressed = true;
+                    if(zPressed && !zChecked){
+                        zPressed = false;
+                        zChecked = true;
+                        startRecording();
+                    }
+                }
+            }
+
+            function keyReleased(e){
+                ctrlPressed = false;
+                shiftPressed = false;
+                zPressed = false;
+                zChecked = false;
+                stopRecording();
+            }
+        });
+    </script>
+
     <script src="/javascripts/binary.js"></script>
     <script src="/javascripts/recorder.js"></script>
 
@@ -26,55 +77,6 @@
 
 
 
-<script src="/javascripts/jquery-3.1.1.js"></script>
-<script>
-    $(document).ready(function(){
-
-        // check for session
-        // redirect user to login page if session does not exist
-        $.get('/check-session', {}, function(data){
-            if(data === 'sessionless'){
-                window.location.replace("http://localhost:3000");
-            }
-        });
-
-        window.addEventListener("keydown", keyPressed, false);
-        window.addEventListener("keyup", keyReleased, false);
-
-        var ctrlPressed = false;
-        var shiftPressed = false;
-        var zPressed = false;
-
-        // to prevent EventEmitter memory leak
-        var zChecked = false;
-
-        // when ctrl-shift-z is pressed, start recording
-        function keyPressed(e){
-            if(e.ctrlKey){
-                ctrlPressed = true;
-            }
-            if(e.shiftKey && ctrlPressed){
-                shiftPressed = true;
-            }
-            if(e.keyCode == 90 && shiftPressed && ctrlPressed){
-                zPressed = true;
-                if(zPressed && !zChecked){
-                    zPressed = false;
-                    zChecked = true;
-                    startRecording();
-                }
-            }
-        }
-
-        function keyReleased(e){
-            ctrlPressed = false;
-            shiftPressed = false;
-            zPressed = false;
-            zChecked = false;
-            stopRecording();
-        }
-    });
-</script>
 
 
 </body>

@@ -1,6 +1,14 @@
 
 (function(window) {
 
+    // get the session first
+    // we know there is one
+        // or else we would have been auto redirected to the login page
+    var sessionEmail;
+    $.get("/get-session", {}, function(data){
+        sessionEmail = data;
+    });
+
     var client = new BinaryClient('ws://localhost:9001');
 
     client.on('open', function() {
@@ -20,7 +28,9 @@
         var recording = false;
 
         window.startRecording = function() {
-            window.Stream = client.createStream();
+            window.Stream = client.createStream({
+                sessionEmail: sessionEmail
+            });
             recording = true;
         }
 

@@ -22,7 +22,8 @@ var SQLiteStore = require('connect-sqlite3')(session);
 // global variable for audio file
 // used in binary server to store user audio from UI
 // todo: send to speech to text api to transcribe
-var outFile = 'demo.wav';
+/** apr 3 - removed global var, find voice file in /users */
+//var outFile = 'demo.wav';
 
 var sess;
 
@@ -72,6 +73,11 @@ app.get('/check-session', function(req, res){
     }else{
         res.end('exists');
     }
+});
+
+app.get('/get-session', function(req, res){
+    sess = req.session;
+    res.send(sess.email);
 });
 
 
@@ -138,6 +144,16 @@ binaryServer.on('connection', function(client){
 
     client.on('stream', function(stream, meta){
         console.log('new stream (start recording)');
+
+        // meta.sessionEmail has the session
+        //console.log('meta: ' + meta.sessionEmail);
+
+        var userDirectory = "./users/" + meta.sessionEmail;
+        if(!fs.existsSync(userDirectory)){
+            fs.mkdirSync(userDirectory);
+        }
+
+        var outFile = userDirectory + "/command.wav";
 
         var fileWriter = new wav.FileWriter(outFile, {
             channels: 1,
