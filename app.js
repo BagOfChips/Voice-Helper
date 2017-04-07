@@ -4,7 +4,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1');
+var fs = require('fs');
 
 /** --- html to node setup --- */
 
@@ -94,6 +95,46 @@ app.get('/validate-email', function(req, res){
         sess.email = req.query.email;
         res.end('valid');
     }
+});
+
+/** --- translate text--- */
+app.get('/translate', function(req, res) {
+
+    var path = 'users/' + req.session.email;
+    console.log(process.env.SPEECHTOTEXT_USER + " " + process.env.SPEECHTOTEXT_PASS);
+
+    var speech_to_text = new SpeechToTextV1 ({
+      username: process.env.SPEECHTOTEXT_USER,
+      password: process.env.SPEECHTOTEXT_PASS
+    });
+
+
+    var params = {
+      model: 'en-US_BroadbandModel',
+      content_type: 'audio/wav',
+      continuous: true,
+      'interim_results': true,
+      'max_alternatives': 3,
+      'word_confidence': false,
+      timestamps: false,
+      keywords: [],
+      'keywords_threshold': 0.5
+    };
+
+    var recognizeStream = speech_to_text.createRecognizeStream(params);
+
+    fs.createReadStream(path + '/command.wav').pipe(recognizeStream);
+    recognizeStream.pipe(fs.createWriteStream(path + '/transcription.txt'));
+
+    recognizeStream.setEncoding('utf8');
+
+    recognizeStream.on('results', function(event) { onEvent('Results:', event); });
+    recognizeStream.on('data', function(event) { onEvent('Data:', event); });
+    recognizeStream.on('error', function(event) { onEvent('Error:', event); });
+    recognizeStream.on('close', function(event) { onEvent('Close:', event); });
+    recognizeStream.on('speaker_labels', function(event) { onEvent('Speaker_Labels:', event); });
+
+
 });
 
 

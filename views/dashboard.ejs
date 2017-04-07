@@ -26,6 +26,7 @@
 
             // to prevent EventEmitter memory leak
             var zChecked = false;
+            var releasedOnce = false;
 
             // when ctrl-shift-z is pressed, start recording
             function keyPressed(e){
@@ -50,8 +51,18 @@
                 shiftPressed = false;
                 zPressed = false;
                 zChecked = false;
-                stopRecording();
+
+                if (!releasedOnce) {
+                    releasedOnce = true;
+                    stopRecording();
+                    
+                    $.get('/translate', {}, function(data) {
+
+                    });
+                }
+
             }
+
         });
     </script>
 
