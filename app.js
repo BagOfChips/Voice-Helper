@@ -117,7 +117,7 @@ app.get('/translate', function(req, res) {
       'max_alternatives': 3,
       'word_confidence': false,
       timestamps: false,
-      keywords: [],
+      keywords: ['search'],
       'keywords_threshold': 0.5
     };
 
@@ -128,11 +128,11 @@ app.get('/translate', function(req, res) {
 
     recognizeStream.setEncoding('utf8');
 
-    recognizeStream.on('results', function(event) { onEvent('Results:', event); });
-    recognizeStream.on('data', function(event) { onEvent('Data:', event); });
-    recognizeStream.on('error', function(event) { onEvent('Error:', event); });
-    recognizeStream.on('close', function(event) { onEvent('Close:', event); });
-    recognizeStream.on('speaker_labels', function(event) { onEvent('Speaker_Labels:', event); });
+    // recognizeStream.on('results', function(event) { onEvent('Results:', event); });
+    // recognizeStream.on('data', function(event) { onEvent('Data:', event); });
+    // recognizeStream.on('error', function(event) { onEvent('Error:', event); });
+    // recognizeStream.on('close', function(event) { onEvent('Close:', event); });
+    // recognizeStream.on('speaker_labels', function(event) { onEvent('Speaker_Labels:', event); });
 
 
 });
