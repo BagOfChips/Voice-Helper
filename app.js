@@ -101,7 +101,6 @@ app.get('/validate-email', function(req, res){
 app.get('/translate', function(req, res) {
 
     var path = 'users/' + req.session.email;
-    console.log(process.env.SPEECHTOTEXT_USER + " " + process.env.SPEECHTOTEXT_PASS);
 
     var speech_to_text = new SpeechToTextV1 ({
       username: process.env.SPEECHTOTEXT_USER,

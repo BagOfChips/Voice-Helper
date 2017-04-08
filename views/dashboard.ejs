@@ -3,7 +3,7 @@
 <head>
     <title>voice app helper</title>
     <link rel='stylesheet' href='/stylesheets/style.css'/>
-
+    <link rel="stylesheet" type="text/css" href="/stylesheets/dashboard.css">
 
     <script src="/javascripts/jquery-3.1.1.js"></script>
     <script>
@@ -41,6 +41,7 @@
                     if(zPressed && !zChecked){
                         zPressed = false;
                         zChecked = true;
+                        releasedOnce = false;
                         startRecording();
                     }
                 }
@@ -72,19 +73,21 @@
 </head>
 
 <body>
-<h1>dashboard page</h1>
+<div class="dashboard">
+    <h1>Dashboard</h1>
 
-<button onclick="startRecording()">
-    Start Recording
-</button>
+    <button onclick="startRecording()" id="start_recording">
+        Start Recording
+    </button>
 
-<button onclick="stopRecording()">
-    Stop Recording
-</button>
+    <button onclick="stopRecording()" id="stop_recording">
+        Stop Recording
+    </button>
 
-<p>
-    Or, hold down Ctrl-Shift-z to start recording
-</p>
+    <p>
+        Or, hold down Ctrl-Shift-z to start recording
+    </p>
+</div>
 
 
 
