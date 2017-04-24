@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1');
 var fs = require('fs');
-
+var lyricist = require('lyricist')(process.env.GENIUS_KEY);
 
 var speech_to_text = new SpeechToTextV1 ({
   username: process.env.SPEECHTOTEXT_USER,
