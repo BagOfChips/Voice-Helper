@@ -7,6 +7,24 @@ var bodyParser = require('body-parser');
 var SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1');
 var fs = require('fs');
 
+
+var speech_to_text = new SpeechToTextV1 ({
+  username: process.env.SPEECHTOTEXT_USER,
+  password: process.env.SPEECHTOTEXT_PASS
+});
+
+var params = {
+  model: 'en-US_BroadbandModel',
+  content_type: 'audio/wav',
+  continuous: true,
+  'interim_results': true,
+  'max_alternatives': 3,
+  'word_confidence': false,
+  timestamps: false,
+  keywords: ['search'],
+  'keywords_threshold': 0.5
+};
+
 /** --- html to node setup --- */
 
 // client connection
@@ -102,39 +120,26 @@ app.get('/translate', function(req, res) {
 
     var path = 'users/' + req.session.email;
 
-    var speech_to_text = new SpeechToTextV1 ({
-      username: process.env.SPEECHTOTEXT_USER,
-      password: process.env.SPEECHTOTEXT_PASS
-    });
-
-
-    var params = {
-      model: 'en-US_BroadbandModel',
-      content_type: 'audio/wav',
-      continuous: true,
-      'interim_results': true,
-      'max_alternatives': 3,
-      'word_confidence': false,
-      timestamps: false,
-      keywords: ['search'],
-      'keywords_threshold': 0.5
-    };
-
     var recognizeStream = speech_to_text.createRecognizeStream(params);
-
+    //console.log(recognizeStream)
     fs.createReadStream(path + '/command.wav').pipe(recognizeStream);
     recognizeStream.pipe(fs.createWriteStream(path + '/transcription.txt'));
 
     recognizeStream.setEncoding('utf8');
 
-    // recognizeStream.on('results', function(event) { onEvent('Results:', event); });
-    // recognizeStream.on('data', function(event) { onEvent('Data:', event); });
-    // recognizeStream.on('error', function(event) { onEvent('Error:', event); });
-    // recognizeStream.on('close', function(event) { onEvent('Close:', event); });
-    // recognizeStream.on('speaker_labels', function(event) { onEvent('Speaker_Labels:', event); });
+    //recognizeStream.on('results', function(event) { onEvent('Results:', event); });
+    recognizeStream.on('data', function(event) { onEvent('Data:', event); });
+    //recognizeStream.on('error', function(event) { onEvent('Error:', event); });
+    //recognizeStream.on('close', function(event) { onEvent('Close:', event); });
+    //recognizeStream.on('speaker_labels', function(event) { onEvent('Speaker_Labels:', event); });
 
 
 });
+
+/** --- Helper function to print json **/
+function onEvent(name, event) {
+  console.log(name, JSON.stringify(event, null, 2));
+};
 
 
 /** --- do NOT touch the code below --- */
