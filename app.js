@@ -133,12 +133,15 @@ app.get('/translate', function(req, res) {
     //recognizeStream.on('close', function(event) { onEvent('Close:', event); });
     //recognizeStream.on('speaker_labels', function(event) { onEvent('Speaker_Labels:', event); });
 
-
 });
 
 /** --- Helper function to print json **/
 function onEvent(name, event) {
-  console.log(name, JSON.stringify(event, null, 2));
+    let message = JSON.stringify(event, null, 2);
+    lyricist.song({search: message}, function (err, song) {
+      console.log("%s", song.lyrics);
+    });
+    //console.log(name, JSON.stringify(event, null, 2));
 };
 
 
