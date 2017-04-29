@@ -5,7 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1');
-var fs = require('fs');
 var lyricist = require('lyricist')(process.env.GENIUS_KEY);
 
 var speech_to_text = new SpeechToTextV1 ({
@@ -137,12 +136,12 @@ app.get('/translate', function(req, res) {
 
 /** --- Helper function to print json **/
 function onEvent(name, event) {
-    let message = JSON.stringify(event, null, 2);
+    var message = JSON.stringify(event, null, 2);
     lyricist.song({search: message}, function (err, song) {
       console.log("%s", song.lyrics);
     });
     //console.log(name, JSON.stringify(event, null, 2));
-};
+}
 
 
 /** --- do NOT touch the code below --- */
