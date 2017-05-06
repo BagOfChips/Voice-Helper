@@ -4,25 +4,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1');
-var lyricist = require('lyricist')(process.env.GENIUS_KEY);
-
-var speech_to_text = new SpeechToTextV1 ({
-  username: process.env.SPEECHTOTEXT_USER,
-  password: process.env.SPEECHTOTEXT_PASS
-});
-
-var params = {
-  model: 'en-US_BroadbandModel',
-  content_type: 'audio/wav',
-  continuous: true,
-  'interim_results': true,
-  'max_alternatives': 3,
-  'word_confidence': false,
-  timestamps: false,
-  keywords: ['search'],
-  'keywords_threshold': 0.5
-};
 
 /** --- html to node setup --- */
 
@@ -35,17 +16,31 @@ var sqlite3 = require('sqlite3').verbose();     // test databases
 var validator = require('email-validator');     // email validator
 var session = require('express-session');       // sessions
 var connect = require('connect');
-var SQLiteStore = require('connect-sqlite3')(session);
+//var SQLiteStore = require('connect-sqlite3')(session);
 
-// global variable for audio file
-// used in binary server to store user audio from UI
-// todo: send to speech to text api to transcribe
-/** apr 3 - removed global var, find voice file in /users */
-//var outFile = 'demo.wav';
+// speech to text setup
+var SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1');
+var lyricist = require('lyricist')(process.env.GENIUS_KEY);
 
-var sess;
+var speech_to_text = new SpeechToTextV1({
+    username: process.env.SPEECHTOTEXT_USER,
+    password: process.env.SPEECHTOTEXT_PASS
+});
 
+// parameters for watson speech to text api
+var params = {
+    model: 'en-US_BroadbandModel',
+    content_type: 'audio/wav',
+    continuous: true,
+    'interim_results': true,
+    'max_alternatives': 3,
+    'word_confidence': false,
+    timestamps: false,
+    keywords: ['search'],
+    'keywords_threshold': 0.5
+};
 
+/** --- do NOT touch next 30 lines --- */
 
 // login page
 var index = require('./routes/index');
@@ -68,7 +63,6 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// todo: replace secret (and hide it), store in database
 // store in database later or else we cant get to login page
 app.use(session({
     secret: process.env.SPEECHTOTEXT_SESSIONDBSECRET,
@@ -76,46 +70,45 @@ app.use(session({
     saveUninitialized: true
 }));
 
-
 app.use('/', index);
 app.use('/users', users);
 app.use('/dashboard', dashboard);
 
 
-// check for existing session
-// works - March 29
+// check for existing session - ignore type coercion warming
 app.get('/check-session', function(req, res){
-    sess = req.session;
-    if(sess.email == null){
+    if(req.session.email == null){
         res.send('sessionless');
-    }else{
+    } else{
         res.end('exists');
     }
 });
 
 app.get('/get-session', function(req, res){
-    sess = req.session;
-    res.send(sess.email);
+    res.send(req.session.email);
 });
-
 
 
 /** --- email validation and create session --- */
 app.get('/validate-email', function(req, res){
-    sess = req.session;
 
     // check if email is undefined
     // and run through validator node module
     if(req.query.email == undefined || validator.validate(req.query.email) == false){
         res.send('<p>invalid email, try again</p>');
-    } else {
-        sess.email = req.query.email;
+    } else{
+        req.session.email = req.query.email;
         res.end('valid');
     }
 });
 
+
+//
+// clean this code
+//
+
 /** --- translate text--- */
-app.get('/translate', function(req, res) {
+app.get('/translate', function(req, res){
 
     var path = 'users/' + req.session.email;
 
@@ -127,7 +120,9 @@ app.get('/translate', function(req, res) {
     recognizeStream.setEncoding('utf8');
 
     //recognizeStream.on('results', function(event) { onEvent('Results:', event); });
-    recognizeStream.on('data', function(event) { onEvent('Data:', event); });
+    recognizeStream.on('data', function(event){
+        onEvent('Data:', event);
+    });
     //recognizeStream.on('error', function(event) { onEvent('Error:', event); });
     //recognizeStream.on('close', function(event) { onEvent('Close:', event); });
     //recognizeStream.on('speaker_labels', function(event) { onEvent('Speaker_Labels:', event); });
@@ -135,10 +130,10 @@ app.get('/translate', function(req, res) {
 });
 
 /** --- Helper function to print json **/
-function onEvent(name, event) {
+function onEvent(name, event){
     var message = JSON.stringify(event, null, 2);
-    lyricist.song({search: message}, function (err, song) {
-      console.log("%s", song.lyrics);
+    lyricist.song({search: message}, function(err, song){
+        console.log("%s", song.lyrics);
     });
     //console.log(name, JSON.stringify(event, null, 2));
 }
@@ -178,14 +173,12 @@ app.use(function(err, req, res, next){
 });
 
 
-
 /** --- binary server --- */
 binaryServer = BinaryServer({
     port: 9001
 });
 
-// todo: store .wav file into '/users/<USER_EMAIL>/voiceCommand.wav'
-
+// store .wav file into '/users/<USER_EMAIL>/voiceCommand.wav'
 binaryServer.on('connection', function(client){
     console.log('new connection (page loaded)');
 
@@ -193,8 +186,6 @@ binaryServer.on('connection', function(client){
         console.log('new stream (start recording)');
 
         // meta.sessionEmail has the session
-        //console.log('meta: ' + meta.sessionEmail);
-
         var userDirectory = "./users/" + meta.sessionEmail;
         if(!fs.existsSync(userDirectory)){
             fs.mkdirSync(userDirectory);
@@ -211,13 +202,11 @@ binaryServer.on('connection', function(client){
         stream.pipe(fileWriter);
         stream.on('end', function(){
 
-            // now we have a demo.wav file ready to transcribe
             fileWriter.end();
             console.log('wrote to file ' + outFile);
         });
     });
 });
-
 
 
 module.exports = app;

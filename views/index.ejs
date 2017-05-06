@@ -77,7 +77,7 @@
 
 
         input[type=text] {
-            width: 80px;
+            width: 100px;
             box-sizing: border-box;
             border-radius: 30px;
             font-size: 16px;
@@ -97,7 +97,7 @@
             transition: width 0.4s ease-in-out;
         }
         input[type=text]:focus {
-            width: 120px;
+            width: 150px;
         }
 
         input:focus{
@@ -155,7 +155,6 @@
 
 		// upon document loaded
 		// check for session, yes >> go to dashboard
-		// works - March 29
 		$.get("http://localhost:3000/check-session", {}, function(data){
 			if(data === 'exists'){
 				window.location.replace("http://localhost:3000/dashboard");
@@ -192,6 +191,8 @@
         var squareKeyframe1 = screenHeight * 0.42 - 50;
         var hovered = false;
 
+        var finishedKeyframe = false;
+
         /** --- code for animations --- */
 
         $("#square").css({
@@ -200,12 +201,14 @@
             "width": "90px",
             "height": "90px",
             "transform": "rotate(-50deg)"
-        }).delay(100).animate({
+        }).delay(500).animate({
             marginTop: squareKeyframe1,
             opacity: "1.0",
             transform: 'rotate(0deg)'
-        }, 400, "swing").hover(function(){
-            if(!hovered){
+        }, 750, "swing", function(){
+            finishedKeyframe = true;
+        }).hover(function(){
+            if(!hovered && finishedKeyframe == true){
                 hovered = true;
                 $(this).animate({
                     width: "400px",
@@ -215,16 +218,16 @@
                     borderBottomLeftRadius: 300,
                     borderBottomRightRadius: 300,
                     marginTop: squareKeyframe1 - 150
-                }, 400, "swing");
+                }, 500, "swing");
 
-                $("#form").delay(350).css({
+                $("#form").delay(500).css({
                     "visibility": "visible",
                     "left": "-10px",
                     "opacity": "0.0"
                 }).animate({
                     opacity: "1.0",
                     left: "0px"
-                }, 400, "swing");
+                }, 500, "swing");
             }
         });
 
@@ -250,7 +253,7 @@
                         $("#error").animate({
                             left: "+=10",
                             opacity: 1.0
-                        }, 400, function(){});
+                        }, 500, function(){});
                         errorFlag = false;
                     }
 				}
