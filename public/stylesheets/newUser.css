@@ -1,0 +1,13 @@
+/*  inner div background
+    to turn into circle   */
+#square{
+    background: #c364b2;
+}
+
+input[type=text] {
+    background-color: #e19ed1;
+}
+
+.button{
+    background: #e19ed1;
+}

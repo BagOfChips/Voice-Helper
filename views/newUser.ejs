@@ -4,122 +4,8 @@
     <title>voice app helper</title>
     <link rel='stylesheet' href='/stylesheets/bootstrap.css'/>
     <link rel='stylesheet' href='/stylesheets/style.css'/>
-
-	<style>
-
-        /* using a custom font */
-        @font-face{
-            font-family: CaviarDreams;
-            src: url(/CaviarDreams.ttf);
-        }
-
-        body{
-            font-family: CaviarDreams;
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        /*  most outer div
-            this takes up the entire body  */
-        #page-container{
-            position: relative;
-            top: 0;
-            right: 0;
-            height: 100%;
-            width: 100%;
-        }
-
-        /* horizontal centering */
-        .center{
-            margin: auto;
-            width: 50%;
-        }
-
-        /*  inner div background
-            to turn into circle   */
-        #square{
-            opacity: 0;
-            width: 500px;
-            height: 500px;
-            background: #7bc3ae;
-        }
-
-        /* text alignment for header */
-        h1, h3{
-            text-align: center;
-        }
-
-        /* vertical centering */
-        .middle-div {
-            position: relative;
-            top: 48.5%;
-            -webkit-transform: translateY(-55%);
-            -ms-transform: translateY(-55%);
-            transform: translateY(-55%);
-        }
-
-        /*
-            -- visibility vs display --
-
-            visibility: hidden
-                takes up space
-
-            display: none
-                does not take up space
-
-            opacity
-                can "hide" but still select
-                                             */
-        #form{
-            visibility: hidden;
-            opacity: 0;
-        }
-
-
-        input[type=text] {
-            width: 100px;
-            box-sizing: border-box;
-            border-radius: 30px;
-            font-size: 16px;
-            border: none;
-            background-color: #8fe1ca;
-
-            background-position: 5px 7px;
-            background-repeat: no-repeat;
-
-            /* css shorthand: top, right, left, bottom */
-            padding-top: 10px;
-            padding-right: 10px;
-            padding-left: 10px;
-            padding-bottom: 10px;
-
-            -webkit-transition: width 0.4s ease-in-out;
-            transition: width 0.4s ease-in-out;
-        }
-        input[type=text]:focus {
-            width: 150px;
-        }
-
-        input:focus{
-            outline: none;
-        }
-
-        .button{
-            border-radius: 30px;
-            border: none;
-            background: #8fe1ca;
-            padding-top: 10px;
-            padding-right: 10px;
-            padding-left: 10px;
-            padding-bottom: 10px;
-        }
-
-        #error{
-            left: -10px;
-            opacity: 0.0;
-        }
-
-    </style>
+    <link rel='stylesheet' href='/stylesheets/login.css'/>
+    <link rel='stylesheet' href='/stylesheets/newUser.css'/>
 </head>
 
 <body>
@@ -136,6 +22,12 @@
 
             <input type="text" id="email" placeholder="email...">
             <label for="email"></label>
+
+            <br>
+            <p>enter a password</p>
+            <input type="text" id="password" placeholder="password...">
+            <label for="password"></label>
+
             <input type="submit" id="validate-email" class="button">
         </div>
 
