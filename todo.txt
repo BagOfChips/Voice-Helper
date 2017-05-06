@@ -1,0 +1,40 @@
+
+/.. may 6 2017 ../
+todo: finish UI for setting up a complete login page
+    -finish user creation page (missing CSS okay)
+    -add password field
+        -note: sending usernames / passwords over HTTPS if fine
+        -use bcrypt (search in npm modules) to hash password on server
+        -lets use mongoDB to store user info (mainly just to learn noSQL)
+
+/.. <some other day> 2017 ../
+todo: set up backend to record / store voice logs
+    -make sure login / user creation works (and creates a persisting session)
+    -make sure there is a logout button (which deletes the session)
+    -make sure obtain user info from out database
+        -user email should be a plain text
+        -user password should be encrypted
+    -set up s3 (search npm modules) file system to store voice logs
+        -after recording, we will not replace the old recording
+        -the default name of the recording should be voil<RECORDING_NUMBER>.wav
+
+/.. <some other day> 2017 ../
+todo: 'clear' current dashboard page + css
+    -get rid of recording / stop recording buttons
+    -alert the user (in some way) that they can hold 'v' to record
+    -after recording, allow user to edit their recording
+        -change its name
+        -set it public / private
+        -transcribe it with watson speech to text API
+        -delete it
+        -playback
+        -organize it in group (do this later)
+
+/.. <some other day> 2017 ../
+todo: make it cool
+    -on all pages, have a button that plays back a random public voice log
+    -CSS (draw this on paper first)
+    -allow users to organize their logs (SEE IMGUR)
+
+
+
