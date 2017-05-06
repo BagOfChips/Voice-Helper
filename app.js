@@ -102,11 +102,14 @@ app.get('/validate-email', function(req, res){
 });
 
 
-//
-// clean this code
-//
 
-/** --- translate text--- */
+/**
+ * -- may 6 --
+ * commenting out this feature
+ * will re enable when everything has been set up
+ *
+ *
+ * --- translate text---
 app.get('/translate', function(req, res){
 
     var path = 'users/' + req.session.email;
@@ -128,7 +131,7 @@ app.get('/translate', function(req, res){
 
 });
 
-/** --- Helper function to print json **/
+// helper function to print json
 function onEvent(name, event){
     var message = JSON.stringify(event, null, 2);
     lyricist.song({search: message}, function(err, song){
@@ -136,7 +139,7 @@ function onEvent(name, event){
     });
     //console.log(name, JSON.stringify(event, null, 2));
 }
-
+*/
 
 /** --- do NOT touch the code below --- */
 
