@@ -129,19 +129,24 @@
     <div id="square" class="center">
 
         <div id="form" class="middle-div text-center">
-            <h1>login screen</h1>
+            <h1>voil</h1>
+            <p>new user? sign up <a href='/newUser'>here</a></p>
 
-
-            <h3>Enter your email:</h3>
+            <h3>enter your email:</h3>
             <input type="text" id="email" placeholder="email...">
             <label for="email"></label>
+
+            <input type="text" id="password" placeholder="password...">
+            <label for="password"></label>
+
             <input type="submit" id="validate-email" class="button">
         </div>
 
         <div class="middle-div text-center" id="error"></div>
-
-
     </div>
+
+
+
 </div>
 
 
@@ -155,8 +160,8 @@
 
 		// upon document loaded
 		// check for session, yes >> go to dashboard
-		$.get("http://localhost:3000/check-session", {}, function(data){
-			if(data === 'exists'){
+		$.get("http://localhost:3000/check-session", {}, function(sessionExists){
+			if(sessionExists === true){
 				window.location.replace("http://localhost:3000/dashboard");
 			}
 		});
@@ -241,12 +246,11 @@
 			$.get("http://localhost:3000/validate-email", {
 				email: email
 			}, function(data){
-				if(data === 'valid'){
-
+			    // email is valid
+				if(data === true){
 					// session will be setup for the user
 					window.location.replace("http://localhost:3000/dashboard");
 				}else{
-
 					// error message if invalid email
 					$("#error").html(data);
                     if(errorFlag == true){

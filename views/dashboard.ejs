@@ -11,8 +11,8 @@
 
             // check for session
             // redirect user to login page if session does not exist
-            $.get('/check-session', {}, function(data){
-                if(data === 'sessionless'){
+            $.get('/check-session', {}, function(sessionExists){
+                if(sessionExists === false){
                     window.location.replace("http://localhost:3000");
                 }
             });
@@ -29,6 +29,7 @@
             var releasedOnce = false;
 
             // when ctrl-shift-z is pressed, start recording
+            // todo: may 6 - make it simple (say hold 'v' to record)
             function keyPressed(e){
                 if(e.ctrlKey){
                     ctrlPressed = true;
@@ -47,6 +48,7 @@
                 }
             }
 
+            // upon key release, stop recording
             function keyReleased(e){
                 ctrlPressed = false;
                 shiftPressed = false;
@@ -56,14 +58,9 @@
                 if (!releasedOnce) {
                     releasedOnce = true;
                     stopRecording();
-                    
-                    $.get('/translate', {}, function(data) {
-
-                    });
                 }
 
             }
-
         });
     </script>
 

@@ -42,12 +42,10 @@ var params = {
 
 /** --- do NOT touch next 30 lines --- */
 
-// login page
-var index = require('./routes/index');
+var index = require('./routes/index'); // login page
 var users = require('./routes/users');
-
-// dashboard page
-var dashboard = require('./routes/dashboard');
+var dashboard = require('./routes/dashboard'); // dashboard
+var newUser = require('./routes/newUser'); // user creation
 
 var app = express();
 
@@ -73,14 +71,15 @@ app.use(session({
 app.use('/', index);
 app.use('/users', users);
 app.use('/dashboard', dashboard);
+app.use('/newUser', newUser);
 
-
-// check for existing session - ignore type coercion warming
+// check for existing session - ignore type coercion warning
+    // returns true if session does exist
 app.get('/check-session', function(req, res){
     if(req.session.email == null){
-        res.send('sessionless');
-    } else{
-        res.end('exists');
+        res.send(false);
+    }else{
+        res.send(true);
     }
 });
 
@@ -98,7 +97,7 @@ app.get('/validate-email', function(req, res){
         res.send('<p>invalid email, try again</p>');
     } else{
         req.session.email = req.query.email;
-        res.end('valid');
+        res.send(true);
     }
 });
 
