@@ -3,7 +3,7 @@
 todo: finish UI for setting up a complete login page
     -finish user creation page (missing CSS okay)
     -add password field
-        -note: sending usernames / passwords over HTTPS if fine
+        -note: sending usernames / passwords over HTTPS is fine
         -use bcrypt (search in npm modules) to hash password on server
         -lets use mongoDB to store user info (mainly just to learn noSQL)
 
