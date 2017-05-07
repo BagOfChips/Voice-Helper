@@ -44,6 +44,11 @@ h1, h3{
     text-align: center;
 }
 
+#header{
+    position: relative;
+    top: 5px;
+}
+
 /* vertical centering */
 .middle-div {
     position: relative;

@@ -95,12 +95,42 @@ app.get('/validate-email', function(req, res){
     // and run through validator node module
     if(req.query.email == undefined || validator.validate(req.query.email) == false){
         res.send('invalid email, try again');
-    } else{
+    }else{
         req.session.email = req.query.email;
         res.send(true);
     }
 });
 
+// checks for space in string
+function checkSpace(s) {
+    return /\s/g.test(s);
+}
+
+app.post('/validate-userInfo', function(req, res){
+
+    var email = req.body.email;
+    var password = req.body.password;
+
+    // check if email is undefined
+    // and run through validator node module
+    if(email == undefined || validator.validate(email) == false){
+        res.send('invalid email, try again');
+    }else if(password.length < 6){
+        res.send('password must be longer than 6 characters');
+    }else if(password == undefined || checkSpace(password) == true){
+
+        // we dont need to check the size of the string
+            // this is already done by htmls 'maxLength' attribute
+        // do check for white spaces in the password
+        res.send('please remove any spaces in your password');
+
+    }else{
+
+        // set up session upon success
+        req.session.email = email;
+        res.send(true);
+    }
+});
 
 
 /**
