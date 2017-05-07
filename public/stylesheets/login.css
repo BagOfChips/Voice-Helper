@@ -8,6 +8,9 @@ body{
     font-family: CaviarDreams;
     font-size: 16px;
     font-weight: bold;
+
+    background-color: #0c1823;
+
 }
 
 /*  most outer div
@@ -37,6 +40,7 @@ body{
 
 /* text alignment for header */
 h1, h3{
+    font-weight: bold;
     text-align: center;
 }
 
@@ -112,6 +116,7 @@ input:focus{
 
 #error{
     left: -10px;
+    color: #bce2f9;
 }
 
 

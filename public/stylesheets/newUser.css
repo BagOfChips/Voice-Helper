@@ -1,11 +1,11 @@
 /*  inner div background
     to turn into circle   */
 #square{
-    background: #c364b2;
+    background: #efa1e7;
 }
 
 input[type=text] {
-    background-color: #e19ed1;
+    background-color: #f5c8ec;
 }
 
 #error, #password-message, #email-message{
@@ -15,5 +15,5 @@ input[type=text] {
 }
 
 .button{
-    background: #e19ed1;
+    background: #f5c8ec;
 }
