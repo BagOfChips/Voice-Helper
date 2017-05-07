@@ -6,6 +6,9 @@ todo: finish UI for setting up a complete login page
         -note: sending usernames / passwords over HTTPS is fine
         -use bcrypt (search in npm modules) to hash password on server
         -lets use mongoDB to store user info (mainly just to learn noSQL)
+    -when tab key is clicked, simulate clicking on the next element (text field)
+    -when enter is clicked, simulate form submission
+
 
 /.. <some other day> 2017 ../
 todo: set up backend to record / store voice logs

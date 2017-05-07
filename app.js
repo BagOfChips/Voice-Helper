@@ -18,6 +18,23 @@ var session = require('express-session');       // sessions
 var connect = require('connect');
 //var SQLiteStore = require('connect-sqlite3')(session);
 
+var MongoClient = require('mongodb').MongoClient;
+var assert = require('assert');
+
+var url = 'mongodb://localhost:27017/voice-app';    // connection url
+
+MongoClient.connect(url, function(err, db){
+    assert.equal(null, err);
+    console.log("-- connected to mongo --");
+
+    db.close();
+});
+
+/**
+ * -- may 7 --
+ * we dont need to transcribe anything for now
+ *
+ *
 // speech to text setup
 var SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1');
 var lyricist = require('lyricist')(process.env.GENIUS_KEY);
@@ -39,6 +56,7 @@ var params = {
     keywords: ['search'],
     'keywords_threshold': 0.5
 };
+ */
 
 /** --- do NOT touch next 30 lines --- */
 
@@ -102,7 +120,7 @@ app.get('/validate-email', function(req, res){
 });
 
 // checks for space in string
-function checkSpace(s) {
+function checkSpace(s){
     return /\s/g.test(s);
 }
 
@@ -217,10 +235,10 @@ binaryServer = BinaryServer({
 
 // store .wav file into '/users/<USER_EMAIL>/voiceCommand.wav'
 binaryServer.on('connection', function(client){
-    console.log('new connection (page loaded)');
+    console.log('-- new connection (page loaded) --');
 
     client.on('stream', function(stream, meta){
-        console.log('new stream (start recording)');
+        console.log('-- new stream (start recording) --');
 
         // meta.sessionEmail has the session
         var userDirectory = "./users/" + meta.sessionEmail;
@@ -240,7 +258,7 @@ binaryServer.on('connection', function(client){
         stream.on('end', function(){
 
             fileWriter.end();
-            console.log('wrote to file ' + outFile);
+            console.log('-- wrote to file ' + outFile + ' --');
         });
     });
 });
