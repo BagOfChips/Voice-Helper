@@ -9,7 +9,6 @@
 
 <body>
 
-
 <div id="page-container">
     <div id="square" class="center">
 
@@ -17,18 +16,25 @@
             <h1>voil</h1>
             <p>new user? sign up <a href='/newUser'>here</a></p>
 
-            <h3>enter your email:</h3>
+            <h3>login</h3>
             <input type="text" id="email" placeholder="email...">
-            <label for="email"></label>
+
 
             <br>
-            <input type="text" id="password" placeholder="password...">
-            <label for="password"></label>
+            <div style="visibility: hidden; font-size: 4px">block</div>
 
-            <input type="submit" id="validate-email" class="button">
+            <input type="text" id="password" placeholder="password...">
+
+            <br>
+            <div style="visibility: hidden; font-size: 8px">block</div>
+
+            <input type="submit" id="validate-email" class="button" value="enter">
+
+            <br>
+            <div style="visibility: hidden; font-size: 5px">block</div>
         </div>
 
-        <div class="middle-div text-center" id="error"></div>
+        <div class="text-center middle-div" id="error"></div>
     </div>
 
 </div>

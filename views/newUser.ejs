@@ -19,25 +19,23 @@
 
             <h3>enter your email:</h3>
 
-            <!-- todo: hide this text until user clicks on it -->
-            <p>this will be your user login for voil</p>
-
+            <div class="text-center" id="email-message">this will be your user login for voil</div>
             <input type="text" id="email" placeholder="email...">
-            <label for="email"></label>
 
             <br>
-            <!-- todo: hide this text until user clicks on it -->
-            <p>enter a password</p>
+            <div style="visibility: hidden; font-size: 2px">block</div>
+            <div class="text-center" id="password-message">enter a password</div>
 
             <input type="text" id="password" placeholder="password...">
-            <label for="password"></label>
+
+            <br>
+            <div style="visibility: hidden; font-size: 8px">block</div>
 
             <!-- todo: validate email AND password, adjust error message accordingly -->
-            <input type="submit" id="validate-email" class="button">
+            <input type="submit" id="validate-email" class="button" value="submit">
+
         </div>
-
-        <div class="middle-div text-center" id="error"></div>
-
+        <div class="text-center middle-div" id="error"></div>
 
     </div>
 </div>
@@ -132,9 +130,12 @@
         var errorFlag = true;
 
 		// when the submit button is clicked
-		// validate the email on the server and go to the dashboard
+		// validate the email AND password on the server
 		$("#validate-email").click(function(){
+
 			var email = $("#email").val();
+			var password = $("#password").val();
+
 			$.get("http://localhost:3000/validate-email", {
 				email: email
 			}, function(data){
@@ -155,6 +156,46 @@
 				}
 			});
 		});
+
+
+		// hide html elements until user click on them
+        var emailFlag = true;
+        $("#email").click(function(){
+            if(emailFlag == true){
+                $("#email-message").animate({
+                    opacity: 1,
+                    left: "+=10"
+                }, 500, function(){});
+                emailFlag = false;
+            }
+        });
+
+        var passwordFlag = true;
+        // todo: set the css to 'display: none'
+        $("#validate-email").css({
+            "opacity": "0.0"
+        });
+
+        $("#password").click(function(){
+            if(passwordFlag == true){
+                $("#password-message").animate({
+                    opacity: 1.0,
+                    left: "+=10"
+                }, 500, function(){});
+
+                // set the css of 'display'
+                $("#validate-email").css({
+
+                }).animate({
+                    opacity: 1.0
+                }, 500, function(){});
+
+                passwordFlag = false;
+            }
+        });
+
+
+
 	});
 
 </script>

@@ -8,6 +8,12 @@ input[type=text] {
     background-color: #e19ed1;
 }
 
+#error, #password-message, #email-message{
+    position: relative;
+    left: -10px;
+    opacity: 0.0;
+}
+
 .button{
     background: #e19ed1;
 }

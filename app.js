@@ -94,7 +94,7 @@ app.get('/validate-email', function(req, res){
     // check if email is undefined
     // and run through validator node module
     if(req.query.email == undefined || validator.validate(req.query.email) == false){
-        res.send('<p>invalid email, try again</p>');
+        res.send('invalid email, try again');
     } else{
         req.session.email = req.query.email;
         res.send(true);

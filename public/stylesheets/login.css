@@ -68,7 +68,7 @@ h1, h3{
 
 
 input[type=text] {
-    width: 100px;
+    width: 200px;
     box-sizing: border-box;
     border-radius: 30px;
     font-size: 16px;
@@ -88,7 +88,7 @@ input[type=text] {
     transition: width 0.4s ease-in-out;
 }
 input[type=text]:focus {
-    width: 150px;
+    width: 250px;
 }
 
 input:focus{
@@ -100,28 +100,43 @@ input:focus{
     border: none;
     background: #8fe1ca;
     padding-top: 10px;
-    padding-right: 10px;
-    padding-left: 10px;
+    padding-right: 20px;
+    padding-left: 20px;
     padding-bottom: 10px;
+}
+
+#error, #password-message, #email-message{
+    position: relative;
+    opacity: 0.0;
 }
 
 #error{
     left: -10px;
-    opacity: 0.0;
 }
+
 
 /* changing placeholder colour */
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     color: #6a676b;
+    letter-spacing: 1px;
 }
 :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
     color: #6a676b;
     opacity:  1;
+    letter-spacing: 1px;
 }
 ::-moz-placeholder { /* Mozilla Firefox 19+ */
     color: #6a676b;
     opacity:  1;
+    letter-spacing: 1px;
 }
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
     color: #6a676b;
+    letter-spacing: 1px;
 }
+
+
+
+
+
+
