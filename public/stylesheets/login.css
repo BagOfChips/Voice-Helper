@@ -46,7 +46,12 @@ h1, h3{
 
 #header{
     position: relative;
-    top: 5px;
+    top: 10px;
+}
+
+#email-header{
+    position: relative;
+    top: 7px;
 }
 
 /* vertical centering */

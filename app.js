@@ -110,6 +110,7 @@ app.post('/validate-userInfo', function(req, res){
 
     var email = req.body.email;
     var password = req.body.password;
+    var retypePassword = req.body.retypePassword;
 
     // check if email is undefined
     // and run through validator node module
@@ -120,11 +121,15 @@ app.post('/validate-userInfo', function(req, res){
     }else if(password == undefined || checkSpace(password) == true){
 
         // we dont need to check the size of the string
-            // this is already done by htmls 'maxLength' attribute
+        // this is already done by htmls 'maxLength' attribute
         // do check for white spaces in the password
         res.send('please remove any spaces in your password');
 
+    }else if(retypePassword != password){
+        res.send('passwords do not match');
     }else{
+
+        // todo: valid user info, store in database
 
         // set up session upon success
         req.session.email = email;

@@ -17,7 +17,7 @@
         <div id="form" class="middle-div text-center">
             <h1 id="header">voil</h1>
 
-            <h3>enter your email:</h3>
+            <h3 id="email-header">enter your email:</h3>
 
             <div class="text-center" id="email-message">this will be your user login for voil</div>
             <input type="text" id="email" placeholder="email..." maxlength="32">
@@ -27,6 +27,11 @@
             <div class="text-center" id="password-message">enter a password</div>
 
             <input type="text" id="password" placeholder="password..." maxlength="32">
+
+            <br>
+            <div style="visibility: hidden; font-size: 4px">block</div>
+
+            <input type="text" id="retype-password" placeholder="retype password..." maxlength="32">
 
             <br>
             <div style="visibility: hidden; font-size: 8px">block</div>
@@ -133,11 +138,13 @@
 
 			var email = $("#email").val();
 			var password = $("#password").val();
+			var retypePassword = $("#retype-password").val();
 
 			// use post to send email and password
 			$.post("/validate-userInfo", {
 				email: email,
-                password: password
+                password: password,
+                retypePassword: retypePassword
 			}, function(data){
 			    // email is valid
 				if(data === true){
@@ -170,7 +177,6 @@
         });
 
         var passwordFlag = true;
-        // todo: set the css to 'display: none'
         $("#validate-userInfo").css({
             "opacity": "0.0",
             "visibility": "hidden"
@@ -190,9 +196,19 @@
                     opacity: 1.0
                 }, 500, function(){});
 
+                $("#retype-password").css({
+                    "visibility": "visible"
+                }).animate({
+                    opacity: 1.0
+                }, 500, function(){});
+
                 passwordFlag = false;
             }
         });
+
+        var passwordFlag2 = true;
+
+
 	});
 
 </script>
