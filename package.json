@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "bcrypt": "^1.0.2",
     "binaryjs": "^0.2.1",
     "body-parser": "~1.15.2",
     "connect": "^3.6.0",

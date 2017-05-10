@@ -20,6 +20,7 @@ var connect = require('connect');
 
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
+var bcrypt = require('bcrypt');
 
 var url = 'mongodb://localhost:27017/voice-app';    // connection url
 
@@ -148,12 +149,26 @@ app.post('/validate-userInfo', function(req, res){
     }else{
 
         // todo: valid user info, store in database
+        var user = {
+            "email": email,
+            "password": bcrypt.hashSync(password, bcrypt.genSaltSync(9))
+        };
+        //console.log("New user signed up");
+        MongoClient.connect(url, function(err, db) {
+            assert.equal(null, err);
+            db.collection('user-data').insertOne(user, function(error, result) {
+                assert.equal(null, error);
+                console.log("User data inserted");
+                db.close();
+            });
+        });
 
         // set up session upon success
         req.session.email = email;
         res.send(true);
     }
 });
+
 
 
 /**
