@@ -106,17 +106,42 @@ app.get('/get-session', function(req, res){
     res.send(req.session.email);
 });
 
-
 /** --- email validation and create session --- */
 app.get('/validate-email', function(req, res){
 
     // check if email is undefined
     // and run through validator node module
-    if(req.query.email == undefined || validator.validate(req.query.email) == false){
+
+    let email = req.query.email;
+    let password = req.query.password;
+    var usersArray = [];
+
+    if(email == undefined || validator.validate(email) == false){
         res.send('invalid email, try again');
-    }else{
-        req.session.email = req.query.email;
-        res.send(true);
+    } else {
+        console.log("email is valid");
+        MongoClient.connect(url, function(err, db) {
+            assert.equal(null, err);
+            var cursor = db.collection('user-data').find();
+            cursor.forEach(function(doc, error) {
+                assert.equal(null, error);
+                usersArray.push(doc);
+            }, function() {
+                db.close();
+                console.log(usersArray);
+            });
+        })
+        if (!usersArray.includes({
+            "email": email,
+            "password": password
+        })) {
+            console.log("database doesnt contain matching email and pw");
+            res.send('password does not match email, try again');
+        } else {
+            console.log("login successful");
+            req.session.email = email;
+            res.send(true);
+        }
     }
 });
 

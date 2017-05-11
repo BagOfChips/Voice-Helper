@@ -133,8 +133,10 @@
 		// validate the email on the server and go to the dashboard
 		$("#validate-email").click(function(){
 			var email = $("#email").val();
+            var password = $("#password").val();
 			$.get("http://localhost:3000/validate-email", {
-				email: email
+				email: email,
+                password: password
 			}, function(data){
 			    // email is valid
 				if(data === true){
