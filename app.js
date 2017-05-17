@@ -20,9 +20,22 @@ var connect = require('connect');
 
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
-var bcrypt = require('bcrypt');
+//var bcrypt = require('bcrypt');       // ignore encryption for now
 
-var url = 'mongodb://localhost:27017/voice-app';    // connection url
+// todo: ask richard to gimme his home IP
+// todo: give richard his keys
+var mongoAdmin = {
+    user: process.env.mongoUser,
+    pass: process.env.mongoPass,
+    db: process.env.mongoDB
+};
+
+// connection url
+var url = "mongodb://" + mongoAdmin.user + ":" + mongoAdmin.pass
+    + "@cluster0-shard-00-00-oxy08.mongodb.net:27017,"
+    + "cluster0-shard-00-01-oxy08.mongodb.net:27017,"
+    + "cluster0-shard-00-02-oxy08.mongodb.net:27017/" + mongoAdmin.db
+    + "?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin";
 
 MongoClient.connect(url, function(err, db){
     assert.equal(null, err);
@@ -36,17 +49,17 @@ MongoClient.connect(url, function(err, db){
  * we dont need to transcribe anything for now
  *
  *
-// speech to text setup
-var SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1');
-var lyricist = require('lyricist')(process.env.GENIUS_KEY);
+ // speech to text setup
+ var SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1');
+ var lyricist = require('lyricist')(process.env.GENIUS_KEY);
 
-var speech_to_text = new SpeechToTextV1({
+ var speech_to_text = new SpeechToTextV1({
     username: process.env.SPEECHTOTEXT_USER,
     password: process.env.SPEECHTOTEXT_PASS
 });
 
-// parameters for watson speech to text api
-var params = {
+ // parameters for watson speech to text api
+ var params = {
     model: 'en-US_BroadbandModel',
     content_type: 'audio/wav',
     continuous: true,
@@ -92,8 +105,7 @@ app.use('/users', users);
 app.use('/dashboard', dashboard);
 app.use('/newUser', newUser);
 
-// check for existing session - ignore type coercion warning
-    // returns true if session does exist
+// returns true if session does exist
 app.get('/check-session', function(req, res){
     if(req.session.email == null){
         res.send(false);
@@ -107,37 +119,43 @@ app.get('/get-session', function(req, res){
 });
 
 /** --- email validation and create session --- */
+// todo: check if richard did this correctly
 app.get('/validate-email', function(req, res){
 
     // check if email is undefined
     // and run through validator node module
 
-    let email = req.query.email;
-    let password = req.query.password;
+    var email = req.query.email;
+    var password = req.query.password;
     var usersArray = [];
 
     if(email == undefined || validator.validate(email) == false){
         res.send('invalid email, try again');
-    } else {
-        console.log("email is valid");
-        MongoClient.connect(url, function(err, db) {
+    }else{
+
+        // email is valid
+
+        MongoClient.connect(url, function(err, db){
             assert.equal(null, err);
-            var cursor = db.collection('user-data').find();
-            cursor.forEach(function(doc, error) {
+
+            var cursor = db.collection('users').find();
+            cursor.forEach(function(doc, error){
                 assert.equal(null, error);
+
                 usersArray.push(doc);
-            }, function() {
+            }, function(){
                 db.close();
                 console.log(usersArray);
             });
-        })
-        if (!usersArray.includes({
-            "email": email,
-            "password": password
-        })) {
-            console.log("database doesnt contain matching email and pw");
+        });
+
+        if(!usersArray.includes({
+                "email": email,
+                "password": password
+            })){
+            console.log("--  username not found --");
             res.send('password does not match email, try again');
-        } else {
+        }else{
             console.log("login successful");
             req.session.email = email;
             res.send(true);
@@ -173,27 +191,29 @@ app.post('/validate-userInfo', function(req, res){
         res.send('passwords do not match');
     }else{
 
-        // todo: valid user info, store in database
+        // valid user info, store in database
+        // todo: check if richard did this correctly
         var user = {
             "email": email,
-            "password": bcrypt.hashSync(password, bcrypt.genSaltSync(9))
+            "password": password
         };
-        //console.log("New user signed up");
-        MongoClient.connect(url, function(err, db) {
+
+        MongoClient.connect(url, function(err, db){
             assert.equal(null, err);
-            db.collection('user-data').insertOne(user, function(error, result) {
+
+            // insert user info into the collection 'users'
+            db.collection('users').insertOne(user, function(error, result){
                 assert.equal(null, error);
-                console.log("User data inserted");
+                console.log("-- user data inserted --");
+
+                // set up session upon success
+                req.session.email = email;
+                res.send(true);
                 db.close();
             });
         });
-
-        // set up session upon success
-        req.session.email = email;
-        res.send(true);
     }
 });
-
 
 
 /**
@@ -203,7 +223,7 @@ app.post('/validate-userInfo', function(req, res){
  *
  *
  * --- translate text---
-app.get('/translate', function(req, res){
+ app.get('/translate', function(req, res){
 
     var path = 'users/' + req.session.email;
 
@@ -224,15 +244,15 @@ app.get('/translate', function(req, res){
 
 });
 
-// helper function to print json
-function onEvent(name, event){
+ // helper function to print json
+ function onEvent(name, event){
     var message = JSON.stringify(event, null, 2);
     lyricist.song({search: message}, function(err, song){
         console.log("%s", song.lyrics);
     });
     //console.log(name, JSON.stringify(event, null, 2));
 }
-*/
+ */
 
 /** --- do NOT touch the code below --- */
 
